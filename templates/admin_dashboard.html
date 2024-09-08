@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<section id="admin-dashboard">
+    <h2>Admin Dashboard</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>
+                {% if user[1] != 'admin' %}
+                    {% if user[2] != 'admin' %}
+                        <a href="{{ url_for('grant_access', user_id=user[0]) }}">Grant Admin</a>
+                    {% else %}
+                        <a href="{{ url_for('revoke_access', user_id=user[0]) }}">Revoke Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('delete_user', user_id=user[0]) }}">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
