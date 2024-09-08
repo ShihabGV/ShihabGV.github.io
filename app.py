@@ -21,18 +21,15 @@ def get_channel_subscribers(api_key, channel_id):
 def init_db():
     with sqlite3.connect('users.db') as conn:
         cursor = conn.cursor()
-        # Create table if not exists
         cursor.execute('''CREATE TABLE IF NOT EXISTS users 
                           (id INTEGER PRIMARY KEY, 
                            username TEXT UNIQUE, 
                            password TEXT,
                            role TEXT DEFAULT 'user')''')
-        # Add role column if it doesn't exist
         cursor.execute('PRAGMA table_info(users)')
         columns = [column[1] for column in cursor.fetchall()]
         if 'role' not in columns:
             cursor.execute('ALTER TABLE users ADD COLUMN role TEXT DEFAULT "user"')
-        # Ensure admin user exists
         cursor.execute('''INSERT OR IGNORE INTO users (username, password, role) 
                           VALUES (?, ?, ?)''', 
                        ('admin', generate_password_hash('al@bri4344', method='pbkdf2:sha256'), 'admin'))
@@ -173,4 +170,4 @@ def delete_user(user_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=4344, debug=True)
+    app.run(debug=True)
